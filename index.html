@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Leer contenido del portapapeles</title>
+  </head>
+  <body>
+    <textarea id="input" style="width: 100%; height: 300px;"></textarea>
+    <button onclick="leerTexto()">Leer texto seleccionado en voz alta</button>
+    <script>
+ 
+      function leerTexto() {
+        var textoSeleccionado = window.getSelection().toString();
+        if (textoSeleccionado !== '') {
+          var mensaje = new SpeechSynthesisUtterance(textoSeleccionado);
+          window.speechSynthesis.speak(mensaje);
+        }
+      }
+
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        // La página web se ejecuta como una aplicación independiente
+        // Puede acceder al portapapeles del usuario sin mostrar una alerta
+        document.addEventListener('DOMContentLoaded', function() {
+          var input = document.getElementById('input');
+          input.addEventListener('paste', function(event) {
+            var textoPegado = event.clipboardData.getData('text/plain');
+            input.value = textoPegado;
+          });
+        });
+      } else {
+        // La página web se ejecuta en un navegador normal
+        // Debe mostrar una alerta para acceder al portapapeles del usuario
+        alert('Para leer el contenido del portapapeles, debe permitir el acceso al portapapeles cuando se le solicite.');
+      }
+    </script>
+  </body>
+</html>
